@@ -1,61 +1,31 @@
-Invoice & Inventory Management Web App
+🔹 Project 1: Invoice & Inventory Management Tool
+A web-based application built with pure HTML, CSS, and JavaScript — no external frameworks or backend — designed for freelancers, startups, and small businesses.
 
-A web-based tool for generating invoices and managing inventory using only HTML, CSS, and JavaScript. Built without any frameworks or external backends, this app is ideal for freelancers, startups, and small businesses.
+Features:
 
-Features
+Dynamic invoice creation with logo upload
 
-Invoice Generator:
+Auto-calculating tax, subtotal, and total
 
-Input business and client details
+Download invoices as PDF (via jsPDF + html2canvas)
 
-Upload logo via drag-and-drop (PNG)
+Inventory management with item tracking and analytics
 
-Add dynamic invoice items (description, quantity, unit price)
+Dashboard with tabbed interface, search, CSV export
 
-Automatic calculations: subtotal, tax (10%), and total
+Tech: HTML, CSS, JavaScript, jsPDF, html2canvas
+File: bizmanager.html — fully self-contained
 
-Styled invoice preview
+🔹 Project 2: Business Assistant (Under Development)
+A prototype of an AI-assisted business assistant aimed at helping users manage small business operations via a conversational interface. Features in development include:
 
-Download invoice as PDF (using jsPDF and html2canvas)
+Task planning and reminders
 
-Optional save via localStorage
+Smart summaries of daily inventory and invoices
 
-Inventory Management:
+AI-based suggestions for reordering stock
 
-Add, edit, delete inventory items (name, SKU, quantity, unit price)
+Simple chatbot-style UI for user interaction
 
-Track total stock value
-
-Mark items as dispatched, received, or low stock
-
-Record payables, credit received, and payment status
-
-View summary analytics (payables, stock worth)
-
-Dashboard:
-
-Tabbed navigation: Invoice | Inventory | Payables
-
-Live search and filter
-
-Responsive and sortable tables
-
-Export inventory as CSV
-
-Technology Stack
-
-HTML: Semantic structure and layout
-
-CSS: Responsive styling with variables and transitions
-
-JavaScript: Data handling, live calculations, localStorage, PDF export
-
-File Info
-
-bizmanager.html — a single self-contained file with all HTML, CSS, and JS
-
-Author & Usage
-
-Created by: umme ruman
-GitHub Repository: https://github.com/UMME2345/my-website
+Goal: To eventually integrate lightweight AI models or APIs for natural language processing and productivity automation.
 
