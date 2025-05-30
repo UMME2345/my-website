@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Business Assistant</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-header img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+            padding: 12px 15px;
+            border-radius: 18px;
+            line-height: 1.4;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            background-color: #3498db;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .bot-message {
+            background-color: #ecf0f1;
+            color: #333;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid #eee;
+        }
+        
+        #message-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            outline: none;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        #message-input:focus {
+            border-color: #3498db;
+        }
+        
+        #send-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #send-button:hover {
+            background-color: #2980b9;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            padding: 10px;
+            margin-bottom: 15px;
+            margin-right: auto;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #95a5a6;
+            border-radius: 50%;
+            margin: 0 3px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .feature-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-card h3 {
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .chat-container {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Business Assistant</h1>
+            <p class="subtitle">Your virtual partner for business success</p>
+        </header>
+        
+        <div class="chat-container">
+            <div class="chat-header">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiwyQTEwLDEwIDAgMCwwIDIsMTJBMTAsMTAgMCAwLDAgMTIsMjJBMTAsMTAgMCAwLDAgMjIsMTJBMTAsMTAgMCAwLDAgMTIsMk0xMiw0QTgsOCAwIDAsMSAyMCwxMkE4LDggMCAwLDEgMTIsMjBBOCw4IDAgMCwxIDQsMTJBOCw4IDAgMCwxIDEyLDRNMTMuNSwxN0MxMy4xOSwxNyAxMywxNi43OSAxMywxNi41QzEzLDE2LjIyIDEzLjE5LDE2IDEzLjUsMTZDMTMuNzksMTYgMTQsMTYuMjIgMTQsMTYuNUMxNCwxNi43OSAxMy43OSwxNyAxMy41LDE3TTEyLDVjLTMuODYsMC03LDMuMTMtNyw3QzUsMTUuODcgOC4xNCwxOSAxMiwxOUMxNS44NiwxOSAxOSwxNS44NyAxOSwxMkMxOSw4LjEzIDE1Ljg2LDUgMTIsNU0xMiw3QzE0LjE5LDcgMTYsOC44MSAxNiwxMUExLDEgMCAwLDEgMTUsMTJBMSwxIDAgMCwxIDE0LDExQzE0LDkuOSAxMy4xLDkgMTIsOUMxMC45LDkgMTAsOS45IDEwLDExQTEsMSAwIDAsMSA5LDEyQTEsMSAwIDAsMSA4LDExQzgsOC44MSA5LjgxLDcgMTIsN1oiIC8+PC9zdmc+" alt="AI Icon">
+                Business Assistant
+            </div>
+            
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">
+                    Hello! I'm your AI Business Assistant. How can I help you today? I can assist with:
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Business strategy advice</li>
+                        <li>Market research insights</li>
+                        <li>Financial planning</li>
+                        <li>Marketing ideas</li>
+                        <li>Product development</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="chat-input">
+                <input type="text" id="message-input" placeholder="Type your business question here..." autocomplete="off">
+                <button id="send-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <h3>Business Strategy</h3>
+                <p>Get expert advice on business planning, competitive analysis, and growth strategies tailored to your industry.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Financial Insights</h3>
+                <p>Receive guidance on budgeting, forecasting, investment decisions, and financial management.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Marketing Support</h3>
+                <p>Develop effective marketing campaigns, branding strategies, and customer acquisition plans.</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 AI Business Assistant. All rights reserved.</p>
+            <p>This is a demo application. Responses are simulated for demonstration purposes.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageInput = document.getElementById('message-input');
+            const sendButton = document.getElementById('send-button');
+            const chatMessages = document.getElementById('chat-messages');
+            
+            // Sample business knowledge base
+            const businessKnowledge = {
+                "strategy": "Developing a strong business strategy involves: 1) Defining clear objectives, 2) Analyzing your competition, 3) Understanding your target market, 4) Identifying your unique value proposition, and 5) Creating measurable KPIs.",
+                "marketing": "Effective marketing strategies include: 1) Content marketing to establish authority, 2) Social media engagement, 3) Email campaigns for lead nurturing, 4) SEO for organic growth, and 5) Data-driven decision making.",
+                "finance": "Key financial considerations: 1) Maintain 6 months of operating expenses, 2) Diversify revenue streams, 3) Monitor cash flow weekly, 4) Invest in growth opportunities, and 5) Regularly review financial statements.",
+                "startup": "For startups: 1) Validate your idea with minimal viable product, 2) Bootstrap when possible, 3) Focus on customer acquisition cost, 4) Build a strong founding team, and 5) Seek mentorship from experienced entrepreneurs.",
+                "product": "Product development tips: 1) Solve a real customer pain point, 2) Prioritize user experience, 3) Implement agile development, 4) Gather continuous feedback, and 5) Plan for iterative improvements.",
+                "hello": "Hello! I'm your AI Business Assistant. I can help with strategy, marketing, finance, and other business topics. What would you like to discuss?",
+                "help": "I can assist with: business strategy, marketing plans, financial advice, startup guidance, product development, and more. Just ask me anything business-related!"
+            };
+            
+            // Common business questions and responses
+            const commonQuestions = [
+                { keywords: ["strategy", "plan", "growth"], responseKey: "strategy" },
+                { keywords: ["market", "brand", "customer"], responseKey: "marketing" },
+                { keywords: ["finance", "money", "revenue", "profit"], responseKey: "finance" },
+                { keywords: ["startup", "new business", "entrepreneur"], responseKey: "startup" },
+                { keywords: ["product", "development", "feature"], responseKey: "product" },
+                { keywords: ["hello", "hi", "hey"], responseKey: "hello" },
+                { keywords: ["help", "support", "assistance"], responseKey: "help" }
+            ];
+            
+            // Send message function
+            function sendMessage() {
+                const message = messageInput.value.trim();
+                if (message === '') return;
+                
+                // Add user message to chat
+                addMessage(message, 'user');
+                messageInput.value = '';
+                
+                // Show typing indicator
+                showTypingIndicator();
+                
+                // Simulate AI thinking time
+                setTimeout(() => {
+                    // Remove typing indicator
+                    removeTypingIndicator();
+                    
+                    // Generate and add bot response
+                    const response = generateResponse(message);
+                    addMessage(response, 'bot');
+                    
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1500);
+            }
+            
+            // Add message to chat
+            function addMessage(text, sender) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+                messageElement.classList.add(sender + '-message');
+                messageElement.textContent = text;
+                chatMessages.appendChild(messageElement);
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Show typing indicator
+            function showTypingIndicator() {
+                const typingElement = document.createElement('div');
+                typingElement.classList.add('typing-indicator');
+                typingElement.id = 'typing-indicator';
+                typingElement.innerHTML = `
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                `;
+                chatMessages.appendChild(typingElement);
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Remove typing indicator
+            function removeTypingIndicator() {
+                const typingElement = document.getElementById('typing-indicator');
+                if (typingElement) {
+                    typingElement.remove();
+                }
+            }
+            
+            // Generate response based on user input
+            function generateResponse(message) {
+                const lowerMessage = message.toLowerCase();
+                
+                // Check for specific questions
+                for (const question of commonQuestions) {
+                    for (const keyword of question.keywords) {
+                        if (lowerMessage.includes(keyword)) {
+                            return businessKnowledge[question.responseKey];
+                        }
+                    }
+                }
+                
+                // Default response if no specific match
+                return "I'm an AI business assistant focused on strategy, marketing, finance, and operations. Could you clarify or ask about a specific business topic? For example: 'How can I improve my marketing strategy?' or 'What financial metrics should I track?'";
+            }
+            
+            // Event listeners
+            sendButton.addEventListener('click', sendMessage);
+            
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Initial greeting
+            setTimeout(() => {
+                addMessage("Type your business question above and I'll provide expert advice to help you succeed!", 'bot');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
